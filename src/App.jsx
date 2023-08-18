@@ -1,34 +1,33 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import { Button, Card, Col, Row, Spinner } from 'react-bootstrap'
+import News from './assets/components/News/News'
 
 function App() {
-  const [count, setCount] = useState(0)
+const [news, setNews] = useState([]);
+  useEffect( () => {
+    fetch('https://newsapi.org/v2/everything?q=tesla&from=2023-07-18&sortBy=publishedAt&apiKey=e0de978d7a7941b4ac4333373325d010')
+    .then(res => res.json())
+    .then(data => setNews(data.articles))
+  },[])
+  return(
+    <div className='App'>
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      
+
+        {
+          news.length === 0 ? 
+          <Spinner animation="border" variant="primary" />
+          :
+          <Row xs={1} md={3} className="g-4">
+          {
+            news.map(nw => <News news={nw}></News>)
+          }
+      </Row>
+      }
+    </div>
   )
 }
 
